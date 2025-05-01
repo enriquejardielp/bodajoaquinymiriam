@@ -20,6 +20,7 @@
   "texts": {
     "mainTitle": "Nos Casamos",
     "invitationText": "Con gran alegría queremos compartir este momento especial con ustedes",
-    "rsvpText": "Confirmar Asistencia"
+    "rsvpText": "Confirmar Asistencia",
+    "rsvpLink": "https://forms.google.com/tu-formulario"
   }
 }

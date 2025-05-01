@@ -1,153 +1,83 @@
-class WeddingApp {
-  constructor() {
-    this.init();
-  }
-
-  async init() {
-    try {
-      const response = await fetch('/api/data');
-      if (!response.ok) throw new Error('HTTP error');
-      const data = await response.json();
-      this.setupApp(data);
-    } catch (error) {
-      console.error('Usando datos de respaldo:', error);
-      this.setupApp(this.getBackupData());
+document.addEventListener('DOMContentLoaded', () => {
+  // Datos de respaldo
+  const backupData = {
+    weddingDate: "September 13, 2025 12:00:00 GMT+0200",
+    images: {
+      mainPhoto: "/assets/fotoboda.JPEG",
+      churchPhoto: "/assets/fotoiglesia.JPEG",
+      restaurantPhoto: "/assets/fotorestaurante.JPEG"
+    },
+    texts: {
+      rsvpLink: "https://forms.google.com/tu-formulario"
     }
-  }
+  };
 
-  getBackupData() {
-    return {
-      weddingDate: "September 13, 2025 12:00:00 GMT+0200",
-      images: {
-        mainPhoto: "/assets/fotoboda.JPEG",
-        churchPhoto: "/assets/fotoiglesia.JPEG",
-        restaurantPhoto: "/assets/fotorestaurante.JPEG"
-      },
-      locations: {
-        church: {
-          title: "NOS CASAMOS AQUÍ",
-          time: "13 de Septiembre 2025 · 12:00",
-          mapUrl: "https://maps.google.com/maps?q=https://maps.app.goo.gl/kRf2xXYvWMr4b6bs7&output=embed"
-        },
-        restaurant: {
-          title: "CELEBRACIÓN",
-          time: "Restaurante · 14:30",
-          mapUrl: "https://maps.google.com/maps?q=https://maps.app.goo.gl/MZmUCn91GQZxh1TG7&output=embed"
-        }
-      },
-      texts: {
-        mainTitle: "Nos Casamos",
-        invitationText: "Con gran alegría queremos compartir este momento especial con ustedes",
-        rsvpText: "Confirmar Asistencia"
-      }
+  // Cargar datos
+  fetch('/data.json')
+    .then(res => res.ok ? res.json() : Promise.reject())
+    .then(data => initApp(data))
+    .catch(() => initApp(backupData));
+
+  function initApp(data) {
+    // 1. Configurar DOM
+    const setText = (id, text) => document.getElementById(id).textContent = text;
+    
+    setText('main-title', data.texts.mainTitle);
+    setText('invitation-text', data.texts.invitationText);
+    setText('church-title', data.locations.church.title);
+    setText('church-time', data.locations.church.time);
+    setText('restaurant-title', data.locations.restaurant.title);
+    setText('restaurant-time', data.locations.restaurant.time);
+    
+    // 2. Botón RSVP
+    const rsvpBtn = document.getElementById('rsvp-link');
+    rsvpBtn.textContent = data.texts.rsvpText;
+    rsvpBtn.href = data.texts.rsvpLink || "#";
+
+    // 3. Cargar imágenes
+    const loadImg = (id, src) => {
+      const img = new Image();
+      img.onload = () => {
+        document.getElementById(id).style.backgroundImage = `url('${src}')`;
+      };
+      img.onerror = () => console.error('Error cargando:', src);
+      img.src = src;
     };
-  }
 
-  setupApp(data) {
-    this.loadTexts(data);
-    this.loadImages(data);
-    this.setupMaps(data);
-    this.setupScrollEffects();
-    this.startCountdown(data.weddingDate);
-  }
+    loadImg('photo-container', data.images.mainPhoto);
+    loadImg('church-image', data.images.churchPhoto);
+    loadImg('restaurant-image', data.images.restaurantPhoto);
 
-  loadTexts(data) {
-    document.getElementById('main-title').textContent = data.texts.mainTitle;
-    document.getElementById('invitation-text').textContent = data.texts.invitationText;
-    document.getElementById('rsvp-link').textContent = data.texts.rsvpText;
-    document.getElementById('church-title').textContent = data.locations.church.title;
-    document.getElementById('church-time').textContent = data.locations.church.time;
-    document.getElementById('restaurant-title').textContent = data.locations.restaurant.title;
-    document.getElementById('restaurant-time').textContent = data.locations.restaurant.time;
-  }
-
-  loadImages(data) {
-    this.setBackground('photo-container', data.images.mainPhoto);
-    this.setBackground('church-image', data.images.churchPhoto);
-    this.setBackground('restaurant-image', data.images.restaurantPhoto);
-  }
-
-  setBackground(elementId, imageUrl) {
-    const img = new Image();
-    img.onload = () => {
-      document.getElementById(elementId).style.backgroundImage = `url('${imageUrl}')`;
-    };
-    img.onerror = () => {
-      console.error(`Error cargando imagen: ${imageUrl}`);
-      document.getElementById(elementId).style.backgroundColor = '#f5f0e6';
-    };
-    img.src = imageUrl;
-  }
-
-  setupMaps(data) {
-    document.getElementById('church-map').innerHTML = `
-      <iframe src="${data.locations.church.mapUrl}"
-              loading="lazy"
-              style="border:0;"
-              allowfullscreen></iframe>`;
-
-    document.getElementById('restaurant-map').innerHTML = `
-      <iframe src="${data.locations.restaurant.mapUrl}"
-              loading="lazy"
-              style="border:0;"
-              allowfullscreen></iframe>`;
-  }
-
-  setupScrollEffects() {
+    // 4. Efecto scroll
     window.addEventListener('scroll', () => {
       const scrollY = window.scrollY;
       const windowHeight = window.innerHeight;
 
-      // Efecto de opacidad
+      // Desvanecimiento
       document.getElementById('photo-container').style.opacity = 1 - Math.min(scrollY / (windowHeight * 0.7), 0.9);
 
-      // Animaciones de secciones
-      const sections = [
-        { id: '.announcement', trigger: 0.2 },
-        { id: '.countdown', trigger: 0.4 },
-        { id: '.rsvp', trigger: 0.6 },
-        { id: '#church-section', trigger: 1.2 },
-        { id: '#restaurant-section', trigger: 2.2 }
-      ];
-
-      sections.forEach(({id, trigger}) => {
-        const element = document.querySelector(id);
-        if (scrollY > windowHeight * trigger) {
-          element.classList.add('show');
-        } else if (trigger > 1) {
-          element.classList.remove('show');
-        }
+      // Mostrar elementos
+      document.querySelectorAll('.announcement, .countdown, .rsvp').forEach(el => {
+        el.classList.toggle('show', scrollY > windowHeight * 0.3);
       });
     });
-  }
 
-  startCountdown(weddingDate) {
-    const update = () => {
-      const target = new Date(weddingDate).getTime();
-      const now = new Date().getTime();
-      const diff = target - now;
-
+    // 5. Cuenta regresiva
+    const updateTimer = () => {
+      const diff = new Date(data.weddingDate) - new Date();
+      
       if (diff <= 0) {
-        clearInterval(this.countdownInterval);
         document.getElementById('countdown-timer').innerHTML = '<div>¡Hoy es el día!</div>';
         return;
       }
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
-
-      document.getElementById('days').textContent = days;
-      document.getElementById('hours').textContent = hours;
-      document.getElementById('minutes').textContent = minutes;
-      document.getElementById('seconds').textContent = seconds;
+      document.getElementById('days').textContent = Math.floor(diff / 86400000).toString().padStart(2, '0');
+      document.getElementById('hours').textContent = Math.floor((diff % 86400000) / 3600000).toString().padStart(2, '0');
+      document.getElementById('minutes').textContent = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
+      document.getElementById('seconds').textContent = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
     };
 
-    update();
-    this.countdownInterval = setInterval(update, 1000);
+    setInterval(updateTimer, 1000);
+    updateTimer();
   }
-}
-
-// Iniciar la aplicación cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', () => new WeddingApp());
+});

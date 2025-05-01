@@ -3,33 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nuestra Boda</title>
+  <title>Boda Joaquín y Miriam</title>
   <link rel="stylesheet" href="/style.css">
   <link rel="icon" href="/assets/favicon.ico">
 </head>
 <body>
+  <!-- Fondo principal con efecto de desvanecimiento -->
   <div id="photo-container"></div>
   
+  <!-- Contenido principal -->
   <div class="content">
     <div class="announcement">
-      <h1 id="main-title">Cargando...</h1>
+      <h1 id="main-title">Nos Casamos</h1>
       <p class="invitation-text" id="invitation-text"></p>
     </div>
     
+    <!-- Cuenta regresiva -->
     <div class="countdown">
       <div id="countdown-timer">
-        <div><span id="days">00</span>Días</div>
-        <div><span id="hours">00</span>Horas</div>
-        <div><span id="minutes">00</span>Minutos</div>
-        <div><span id="seconds">00</span>Segundos</div>
+        <div><span id="days">00</span> Días</div>
+        <div><span id="hours">00</span> Horas</div>
+        <div><span id="minutes">00</span> Minutos</div>
+        <div><span id="seconds">00</span> Segundos</div>
       </div>
     </div>
     
+    <!-- Botón RSVP -->
     <div class="rsvp">
-      <a href="#" id="rsvp-link">Confirmar Asistencia</a>
+      <a id="rsvp-link" class="rsvp-button" href="#">Confirmar Asistencia</a>
     </div>
   </div>
 
+  <!-- Sección Iglesia -->
   <div id="church-section" class="location-section">
     <div class="location-image" id="church-image"></div>
     <div class="location-info">
@@ -39,6 +44,7 @@
     </div>
   </div>
 
+  <!-- Sección Restaurante -->
   <div id="restaurant-section" class="location-section">
     <div class="location-image" id="restaurant-image"></div>
     <div class="location-info">
@@ -51,3 +57,7 @@
   <script src="/script.js"></script>
 </body>
 </html>
+
+
+
+

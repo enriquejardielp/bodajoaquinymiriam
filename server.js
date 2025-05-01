@@ -3,43 +3,34 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configuración avanzada
+// Configuración avanzada para Render
 app.use(express.static(path.join(__dirname, 'public'), {
-  extensions: ['html', 'css', 'js'],
   setHeaders: (res, filePath) => {
-    if (filePath.endsWith('.css')) {
-      res.setHeader('Content-Type', 'text/css');
-    }
+    if (filePath.endsWith('.css')) res.setHeader('Content-Type', 'text/css');
+    if (filePath.endsWith('.js')) res.setHeader('Content-Type', 'application/javascript');
   }
-}));
+});
 
-// API endpoint para los datos
-app.get('/api/data', (req, res) => {
+// Endpoint para datos
+app.get('/data.json', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'data.json'), {
     headers: {
-      'Content-Type': 'application/json',
-      'Cache-Control': 'max-age=3600'
+      'Cache-Control': 'no-cache'
     }
   });
 });
 
-// Single Page Application Handler
+// Single Page Application
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'), {
-    headers: {
-      'Content-Type': 'text/html',
-      'Cache-Control': 'no-store'
-    }
-  });
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Manejo de errores profesional
+// Manejo de errores
 app.use((err, req, res, next) => {
-  console.error(`💥 Error: ${err.stack}`);
-  res.status(500).sendFile(path.join(__dirname, 'public', 'error.html'));
+  console.error('⚠️ Error:', err.stack);
+  res.status(500).send('Error en el servidor');
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor escuchando en puerto ${PORT}`);
-  console.log(`🔗 http://localhost:${PORT}`);
+  console.log(`✅ Servidor activo: http://localhost:${PORT}`);
 });
