@@ -1,9 +1,9 @@
 {
   "weddingDate": "September 13, 2025 12:00:00 GMT+0200",
   "images": {
-    "mainPhoto": "fotoboda.JPEG",
-    "churchPhoto": "fotoiglesia.JPEG",
-    "restaurantPhoto": "fotorestaurante.JPEG"
+    "mainPhoto": "/assets/fotoboda.JPEG",
+    "churchPhoto": "/assets/fotoiglesia.JPEG",
+    "restaurantPhoto": "/assets/fotorestaurante.JPEG"
   },
   "locations": {
     "church": {
