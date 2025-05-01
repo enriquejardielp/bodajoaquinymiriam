@@ -3,34 +3,29 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configuración avanzada para Render
+// Configuración para Render
 app.use(express.static(path.join(__dirname, 'public'), {
   setHeaders: (res, filePath) => {
-    if (filePath.endsWith('.css')) res.setHeader('Content-Type', 'text/css');
-    if (filePath.endsWith('.js')) res.setHeader('Content-Type', 'application/javascript');
+    if (filePath.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    }
+    if (filePath.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    }
   }
 });
 
-// Endpoint para datos
+// Ruta para datos
 app.get('/data.json', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'data.json'), {
-    headers: {
-      'Cache-Control': 'no-cache'
-    }
-  });
+  res.sendFile(path.join(__dirname, 'public', 'data.json'));
 });
 
-// Single Page Application
+// Todas las rutas sirven index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Manejo de errores
-app.use((err, req, res, next) => {
-  console.error('⚠️ Error:', err.stack);
-  res.status(500).send('Error en el servidor');
-});
-
+// Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`✅ Servidor activo: http://localhost:${PORT}`);
+  console.log(`✅ Servidor activo en http://localhost:${PORT}`);
 });
