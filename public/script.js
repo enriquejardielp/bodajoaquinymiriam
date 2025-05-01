@@ -136,4 +136,18 @@ class WeddingApp {
       const days = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
       const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+
+      document.getElementById('days').textContent = days;
+      document.getElementById('hours').textContent = hours;
+      document.getElementById('minutes').textContent = minutes;
+      document.getElementById('seconds').textContent = seconds;
+    };
+
+    update();
+    this.countdownInterval = setInterval(update, 1000);
+  }
+}
+
+// Iniciar la aplicación cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => new WeddingApp());
